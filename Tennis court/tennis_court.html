@@ -1,0 +1,291 @@
+﻿<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.min.js"></script>
+		<script>			
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setAnimationLoop( drawFrame );
+			document.body.appendChild( renderer.domElement );
+
+			var scene = new THREE.Scene();
+			
+			var aspect = window.innerWidth/window.innerHeight;
+			var camera = new THREE.PerspectiveCamera( 30, aspect );
+			camera.position.set( 20, 10, 20 );
+			camera.lookAt( new THREE.Vector3() );
+
+            ////////////////////////////////// court - blue
+			var geometry = new THREE.BoxGeometry( 10, 0.1, 16 );
+			var material = new THREE.MeshPhongMaterial({color: "#3BF5B8"});
+		
+			var court = new THREE.Mesh( geometry, material );
+			scene.add( court );
+
+            ////////////////////////////////// court - orange
+            var geometry_in = new THREE.BoxGeometry( 6, 0.1, 12 );
+			var material_in = new THREE.MeshPhongMaterial({color: "orange"});
+		
+			var court_in = new THREE.Mesh( geometry_in, material_in );
+            court_in.position.set(0, 0.1, 0);
+			scene.add( court_in );
+
+			////////////////////////////////// orange court - white lines
+            var geometry_lines = new THREE.BoxGeometry( 6, 0.045, 0.05 );
+			var material_lines = new THREE.MeshPhongMaterial({color: "white"});
+		
+			var central_line = new THREE.Mesh( geometry_lines, material_lines );
+            central_line.position.set(0, 0.15, 0);
+			scene.add( central_line );
+
+            var line2 = new THREE.Mesh( geometry_lines, material_lines );
+            line2.position.set(0, 0.15, -6);
+			scene.add( line2 );
+
+            var line3 = new THREE.Mesh( geometry_lines, material_lines );
+            line3.position.set(0, 0.15, 6);
+			scene.add( line3 );
+
+            var line6 = new THREE.Mesh( geometry_lines, material_lines );
+            line6.position.set(0, 0.15, 2);
+			scene.add( line6 );
+
+            var line7 = new THREE.Mesh( geometry_lines, material_lines );
+            line7.position.set(0, 0.15, -2);
+			scene.add( line7 );
+
+            var geometry_lines2 = new THREE.BoxGeometry( 0.05, 0.045, 12 );
+			var material_lines2 = new THREE.MeshPhongMaterial({color: "white"});
+
+            var line4 = new THREE.Mesh( geometry_lines2, material_lines2 );
+            line4.position.set(3, 0.15, 0);
+			scene.add( line4 );
+
+            var line5 = new THREE.Mesh( geometry_lines2, material_lines2 );
+            line5.position.set(-3, 0.15, 0);
+			scene.add( line5 );
+
+            /////////////////////////////////// Poles for the net
+            var geometry_pole = new THREE.BoxGeometry( 0.1, 1.5, 0.1 );
+			var material_pole = new THREE.MeshPhongMaterial({color: "black"});
+			var material_pole2 = new THREE.MeshPhongMaterial({color: "white"});
+
+            var pole1 = new THREE.Mesh( geometry_pole, material_pole );
+            pole1.position.set(-3.1, 0.8, 0);
+			scene.add( pole1 );
+
+            var pole2 = new THREE.Mesh( geometry_pole, material_pole );
+            pole2.position.set(3.1, 0.8, 0);
+			scene.add( pole2 );
+
+			var pole3 = new THREE.Mesh( geometry_pole, material_pole2 );
+            pole3.position.set(-3, 0.8, 6);
+			scene.add( pole3 );
+
+			var geometry_pole2 = new THREE.BoxGeometry( 0.1, 1.7, 0.1 );
+			var pole4 = new THREE.Mesh( geometry_pole2, material_pole2 );
+            pole4.position.set(3, 0.8, -6);
+			scene.add( pole4 );
+
+            /////////////////////////////////// The net itself
+            var geometry_net = new THREE.BoxGeometry( 6, 0.7, 0.1 );
+			var material_net = new THREE.MeshPhongMaterial({color: "white"});
+            var net = new THREE.Mesh( geometry_net, material_net );
+            net.position.set(0, 1.15, 0);
+			scene.add( net );
+
+			////////////////////////////////// Flag of Romania
+			var geometry_stripe = new THREE.BoxGeometry( 0.5, 1, 0.01 );
+			var material_stripe1 = new THREE.MeshPhongMaterial({color: "blue"});
+			var material_stripe2 = new THREE.MeshPhongMaterial({color: "yellow"});
+			var material_stripe3 = new THREE.MeshPhongMaterial({color: "red"});
+            var stripe1 = new THREE.Mesh( geometry_stripe, material_stripe1 );
+			var stripe2 = new THREE.Mesh( geometry_stripe, material_stripe2 );
+			var stripe3 = new THREE.Mesh( geometry_stripe, material_stripe3 );
+        	stripe1.position.set(-2.75, 1, 6);
+			stripe2.position.set(-2.25, 1, 6);
+			stripe3.position.set(-1.75, 1, 6);
+			scene.add( stripe1 );
+			scene.add( stripe2 );
+			scene.add( stripe3 );
+
+			////////////////////////////////// Flag of Denmark
+			var geometry_flagP1 = new THREE.BoxGeometry( 0.425, 0.425, 0.01 );
+			var material_flagP1 = new THREE.MeshPhongMaterial({color: "red"});
+			var flagp1 = new THREE.Mesh( geometry_flagP1, material_flagP1 );
+			flagp1.position.set(2.7875, 0.8125, -6)
+			var flagp12 = new THREE.Mesh( geometry_flagP1, material_flagP1 );
+			flagp12.position.set(2.7875, 1.3875, -6)
+			scene.add( flagp1 );
+			scene.add( flagp12 );
+
+			var geometry_flagP2 = new THREE.BoxGeometry( 0.925, 0.425, 0.01 );
+			var material_flagP2 = new THREE.MeshPhongMaterial({color: "red"});
+			var flagp2 = new THREE.Mesh( geometry_flagP2, material_flagP2 );
+			flagp2.position.set(1.9625, 0.8125, -6)
+			var flagp22 = new THREE.Mesh( geometry_flagP2, material_flagP2 );
+			flagp22.position.set(1.9625, 1.3875, -6)
+			scene.add( flagp2 );
+			scene.add( flagp22 );
+
+			var geometry_flagHorizontalStripe = new THREE.BoxGeometry( 1.5, 0.15, 0.01 );
+			var material_flagHorizontalStripe = new THREE.MeshPhongMaterial({color: "white"});
+			var flagHorizontalStripe = new THREE.Mesh( geometry_flagHorizontalStripe, material_flagHorizontalStripe );
+			flagHorizontalStripe.position.set(2.25, 1.1, -6)
+			scene.add( flagHorizontalStripe);
+
+			var geometry_flagVerticalStripe = new THREE.BoxGeometry( 0.15, 1, 0.01 );
+			var material_flagVerticalStripe = new THREE.MeshPhongMaterial({color: "white"});
+			var flagVerticalStripe = new THREE.Mesh( geometry_flagVerticalStripe, material_flagVerticalStripe );
+			flagVerticalStripe.position.set(2.5, 1.1, -6)
+			scene.add( flagVerticalStripe);
+
+			////////////////////////// lamps
+			var geometry_lamp = new THREE.BoxGeometry( 0.1, 4, 0.1 );
+			var material_lamp = new THREE.MeshPhongMaterial({color: "gray"});
+
+			for (var x = -4.5; x < 10; x=x+9)
+			{
+				for(var y = -6; y < 7; y=y+12)
+				{
+					var lamp = new THREE.Mesh( geometry_lamp, material_lamp );
+					lamp.position.set(x, 2, y);
+					scene.add(lamp);
+				}
+			}
+
+			////////////////////////// lamps2
+			var geometry_lamp2 = new THREE.BoxGeometry( 1, 0.1, 0.15 );
+			var material_lamp2 = new THREE.MeshPhongMaterial({color: "gray"});
+
+			for(var y = -6; y < 7; y=y+12)
+			{
+				var lamp2 = new THREE.Mesh( geometry_lamp2, material_lamp2 );
+				lamp2.position.set(-4, 4, y);
+				scene.add(lamp2);
+			}
+
+			for(var y = -6; y < 7; y=y+12)
+				{
+					var lamp2 = new THREE.Mesh( geometry_lamp2, material_lamp2 );
+					lamp2.position.set(4, 4, y);
+					scene.add(lamp2);
+				}
+
+			////////////////////////// lamps3
+
+			var geometry_lamp3 = new THREE.BoxGeometry( 0.3, 0.1, 0.3 );
+			var material_lamp3 = new THREE.MeshPhongMaterial({color: "gray"});
+
+			for(var y = -6; y < 7; y=y+12)
+			{
+				var lamp3 = new THREE.Mesh( geometry_lamp3, material_lamp3 );
+				lamp3.position.set(-3.5, 3.9, y);
+				scene.add(lamp3);
+			}
+
+			for(var y = -6; y < 7; y=y+12)
+				{
+					var lamp3 = new THREE.Mesh( geometry_lamp3, material_lamp3 );
+					lamp3.position.set(3.5, 3.9, y);
+					scene.add(lamp3);
+				}
+
+			////////////////////////// benches1
+			var geometry_bench1 = new THREE.BoxGeometry( 0.4, 0.4, 0.1 );
+			var material_bench1 = new THREE.MeshPhongMaterial({color: "#BC4A3C"});
+
+			for(var y = -5; y < 7; y=y+10)
+			{
+				var bench1= new THREE.Mesh( geometry_bench1, material_bench1 );
+				bench1.position.set(-4.3, 0.2, y);
+				scene.add(bench1);
+			}
+
+			for(var y = -5; y < 7; y=y+10)
+				{
+					var bench1 = new THREE.Mesh( geometry_bench1, material_bench1 );
+					bench1.position.set(4.3, 0.2, y);
+					scene.add(bench1);
+				}
+
+			for(var y = -2; y < 3; y=y+4)
+			{
+				var bench1= new THREE.Mesh( geometry_bench1, material_bench1 );
+				bench1.position.set(-4.3, 0.2, y);
+				scene.add(bench1);
+			}
+
+			for(var y = -2; y < 3; y=y+4)
+			{
+				var bench1 = new THREE.Mesh( geometry_bench1, material_bench1 );
+				bench1.position.set(4.3, 0.2, y);
+				scene.add(bench1);
+			}
+
+			////////////////////////// benches2
+			var geometry_bench2 = new THREE.BoxGeometry( 0.4, 0.05, 3 );
+			var material_bench2 = new THREE.MeshPhongMaterial({color: "#BC4A3C"});
+
+			for(var y = -3.5; y < 5; y=y+7)
+			{
+				var bench2= new THREE.Mesh( geometry_bench2, material_bench2 );
+				bench2.position.set(-4.3, 0.38, y);
+				scene.add(bench2);
+			}
+
+			for(var y = -3.5; y < 5; y=y+7)
+			{
+				var bench2= new THREE.Mesh( geometry_bench2, material_bench2 );
+				bench2.position.set(4.3, 0.38, y);
+				scene.add(bench2);
+			}
+
+			////////////////////////// trashcans
+			var geometry_trashcan= new THREE.BoxGeometry( 0.3, 0.4, 0.3 );
+			var material_trashcan = new THREE.MeshPhongMaterial({color: "yellow"});
+
+			for(var y = -5.45; y < 6; y=y+10.9)
+			{
+				var trashcan= new THREE.Mesh( geometry_trashcan, material_trashcan );
+				trashcan.position.set(-4.3, 0.2, y);
+				scene.add(trashcan);
+			}
+
+			for(var y = -5.45; y < 6; y=y+10.9)
+			{
+				var trashcan= new THREE.Mesh( geometry_trashcan, material_trashcan );
+				trashcan.position.set(4.3, 0.2, y);
+				scene.add(trashcan);
+			}
+
+			////////////////////////// walls
+			var geometry_wall1 = new THREE.BoxGeometry( 0.2, 1, 16 );
+			var material_wall1 = new THREE.MeshPhongMaterial({color: "green"});
+			var wall1 = new THREE.Mesh( geometry_wall1, material_wall1 );
+			wall1.position.set(-4.9 , 0.55, 0);
+			scene.add(wall1);
+
+			var geometry_wall2 = new THREE.BoxGeometry( 10, 1, 0.2 );
+			var material_wall2 = new THREE.MeshPhongMaterial({color: "green"});
+			var wall2 = new THREE.Mesh( geometry_wall2, material_wall2 );
+			wall2.position.set(0 , 0.55, -7.9);
+			scene.add(wall2);
+
+            ////////////////////////// light
+            const alight = new THREE.AmbientLight(0xf0f0f0, 1.2)
+            scene.add(alight);
+	
+			function drawFrame()
+			{
+				scene.rotation.y += 0.0005;
+				renderer.render( scene, camera );
+			}
+		</script>
+	</body>
+</html>
